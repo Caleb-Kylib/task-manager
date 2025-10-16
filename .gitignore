@@ -1,0 +1,52 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ---- Django ----
+*.sqlite3
+media/
+staticfiles/
+.env
+
+# ---- Django Migrations ----
+**/migrations/
+!**/migrations/__init__.py
+
+# ---- Virtual Environment ----
+.venv/
+venv/
+env/
+ENV/
+
+# ---- IDE & Editor ----
+.vscode/
+.idea/
+*.swp
+
+# ---- OS-specific ----
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- Logs & Backups ----
+*.log
+*.bak
+*.tmp
+
+# ---- Pytest / Coverage ----
+.coverage
+htmlcov/
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.cache
+
+# ---- Local configuration ----
+*.local
+
+# ---- pyenv ----
+.python-version
+.
