@@ -4,8 +4,9 @@ from rest_framework.response import Response
 from django.utils import timezone
 
 from .models import Task
-from .serializers import TaskSerializer
+from .serializers import TaskSerializer, UserSerializer
 from .permissions import IsOwner
+from django.contrib.auth.models import User
 
 
 class TaskViewSet(viewsets.ModelViewSet):
@@ -88,4 +89,29 @@ class TaskViewSet(viewsets.ModelViewSet):
             task.completed_at = None
             task.save()
             return Response({'detail': 'Task marked incomplete'}, status=status.HTTP_200_OK)
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    """Basic User CRUD viewset.
+
+    - Anyone may create a new user (registration).
+    - Authenticated users may view/update their own profile.
+    - Staff users may list all users.
+    """
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def get_permissions(self):
+        # Allow unauthenticated create (registration)
+        if self.action == 'create':
+            return [permissions.AllowAny()]
+        return [permissions.IsAuthenticated()]
+
+    def get_queryset(self):
+        # Staff can list all; regular users only see themselves
+        user = self.request.user
+        if user.is_staff:
+            return User.objects.all()
+        return User.objects.filter(pk=user.pk)
+
 

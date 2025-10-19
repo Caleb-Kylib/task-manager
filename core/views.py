@@ -1,6 +1,8 @@
-from django.shortcuts import render
-from datetime import datetime
+from django.http import JsonResponse
 
 def home(request):
     # provide the current year for the footer in the template
-    return render(request, 'home.html', {'year': datetime.utcnow().year})
+    return JsonResponse({
+        "message": "Welcome to the Task Manager API",
+        "status": "running"
+    })

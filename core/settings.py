@@ -26,6 +26,7 @@ INSTALLED_APPS = [
 
     # Local apps
     'tasks',
+    "users",
 ]
 
 STATIC_URL = '/static/'
@@ -50,7 +51,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "core" / "templates"],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
