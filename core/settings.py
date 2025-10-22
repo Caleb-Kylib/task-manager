@@ -1,7 +1,8 @@
-# settings.py
+ # settings.py
 from pathlib import Path
 from datetime import timedelta
 import os
+import dj_database_url # <--- NEW: Import for Heroku Database
 
 # -------------------------------------------------------------------------------------------------
 # Environment Variables & Security
@@ -12,7 +13,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Use environment variables for production security (Heroku)
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-b%uace_2_!av=je)abxqod*cs$f_eqlm3&&w3#x=v!o(**$27!')
 
-# 💡 CHANGE 1: Set DEBUG safely for production.
 # This checks for an environment variable called DJANGO_DEBUG.
 # If not present (like on Heroku by default), DEBUG will be False.
 DEBUG = os.environ.get('DJANGO_DEBUG') == 'True' 
@@ -79,12 +79,27 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # -------------------------------------------------------------------------------------------------
 # Database, Auth, and Internationalization
 # -------------------------------------------------------------------------------------------------
+
+# 🔴 FIX 1: Set the Custom User Model
+# Replace 'YourCustomUser' with the exact name of your user model in users/models.py
+AUTH_USER_MODEL = 'users.YourCustomUser'
+
+# 🔴 FIX 2: Configure Database for Heroku (PostgreSQL)
+# Default to SQLite for local development (if DATABASE_URL is not set)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# Overwrite with Heroku's PostgreSQL config when DATABASE_URL environment variable is present
+# This uses the dj_database_url package.
+if os.environ.get('DATABASE_URL'):
+    DATABASES['default'] = dj_database_url.config(
+        conn_max_age=600, 
+        ssl_require=True # Required for Heroku Postgres
+    )
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -113,9 +128,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "core" / "templates" / "static",
 ]
 
-# 💡 CRITICAL CHANGE 2: Configure WhiteNoise Storage Backend.
-# This tells Django to use WhiteNoise's storage backend, which handles compression 
-# and manifest creation for production serving and efficient caching.
+# Configure WhiteNoise Storage Backend for production serving.
 STORAGES = {
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
@@ -131,6 +144,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',          # Browsable API
     ),
     'DEFAULT_PERMISSION_CLASSES': (
+        # If you want registration to be accessible to everyone, you'll need to 
+        # set permission classes specifically on the register view to AllowAny.
         'rest_framework.permissions.IsAuthenticated', # Require login by default
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',

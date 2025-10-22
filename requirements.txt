@@ -8,6 +8,7 @@ charset-normalizer==3.4.3
 click==8.2.1
 colorama==0.4.6
 deprecation==2.1.0
+dj-database-url==3.0.1
 Django==5.2.5
 djangorestframework==3.16.1
 djangorestframework_simplejwt==5.5.1
@@ -46,6 +47,7 @@ packaging==25.0
 postgrest==1.1.1
 proto-plus==1.26.1
 protobuf==4.25.8
+psycopg2-binary==2.9.11
 pyasn1==0.6.1
 pyasn1_modules==0.4.2
 pydantic==2.11.7
