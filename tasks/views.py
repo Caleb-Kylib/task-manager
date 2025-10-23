@@ -2,11 +2,15 @@ from rest_framework import viewsets, permissions, filters, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.utils import timezone
+from django.contrib.auth.models import User
+
 
 from .models import Task
 from .serializers import TaskSerializer, UserSerializer
 from .permissions import IsOwner
-from django.contrib.auth.models import User
+
+
+
 
 
 class TaskViewSet(viewsets.ModelViewSet):
